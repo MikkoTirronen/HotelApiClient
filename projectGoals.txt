@@ -1,0 +1,21 @@
+
+
+The application must manage a set of rooms. A room can be a single room or a double room.
+For double rooms, it must be possible to add extra beds (1 or 2 depending on room size).
+
+You must be able to register a customer and edit their details. 
+A customer may be deleted only if there are no bookings linked to them 
+— the app must check for existing bookings before deletion.
+
+A room can be booked for a customer for one or more nights. 
+The app must manage bookings and show which rooms are available for a given period. 
+It must prevent double-booking (no booking allowed for dates already booked for that room).
+
+It must be possible to cancel a booking or modify a booking. 
+You must be able to search by date or date-range 
+and number of persons and get all available rooms that match the search.
+
+Every booking must have an associated payment (i.e., an invoice). 
+The app must be able to register an incoming payment on an invoice. 
+If no payment is registered within 10 days after the booking is created, 
+the booking is cancelled (it becomes void).
