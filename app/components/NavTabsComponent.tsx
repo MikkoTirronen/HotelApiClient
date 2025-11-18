@@ -1,11 +1,10 @@
-
 interface NavTabsProps {
   activeTab: string;
   onChange: (tab: string) => void;
 }
 
 export default function NavTabs({ activeTab, onChange }: NavTabsProps) {
-  const tabs = ["Bookings", "Create Booking"];
+  const tabs = ["Bookings", "Create Booking", "Search Bookings"];
   return (
     <div className="flex space-x-4 border-b pb-2 mb-4">
       {tabs.map((tab) => (
