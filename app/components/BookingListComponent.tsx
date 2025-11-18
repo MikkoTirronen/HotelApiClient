@@ -2,10 +2,10 @@ import type { Booking } from "~/types/booking";
 
 interface BookingListProps {
   bookings: Booking[];
+  onBookingClick: (booking: Booking) => void;
 }
 
-export default function BookingList({ bookings }: BookingListProps) {
-  console.log(bookings);
+export default function BookingListComponent({ bookings, onBookingClick }: BookingListProps) {
   return (
     <div className="bg-white p-4 rounded-xl shadow-md">
       <h2 className="text-xl font-semibold mb-3">All Bookings</h2>
@@ -15,7 +15,11 @@ export default function BookingList({ bookings }: BookingListProps) {
       ) : (
         <ul className="space-y-2">
           {bookings.map((b) => (
-            <li key={b.id} className="p-3 border rounded shadow-sm">
+            <li
+              key={b.id}
+              className="p-3 border rounded shadow-sm cursor-pointer hover:bg-gray-100"
+              onClick={() => onBookingClick(b)}
+            >
               <strong>{b.customer?.name}</strong> booked room{" "}
               <strong>{b.room?.roomNumber}</strong> from{" "}
               {new Date(b.startDate).toLocaleDateString()} to{" "}
