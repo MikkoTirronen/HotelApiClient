@@ -124,9 +124,9 @@ export default function BookingSearch() {
 
       <ul className="space-y-2">
         {results.map((b) => (
-          <li key={b.id} className="border p-3 rounded shadow-sm">
+          <li key={b.bookingId} className="border p-3 rounded shadow-sm">
             <p>
-              <b>ID:</b> {b.id}
+              <b>ID:</b> {b.bookingId}
             </p>
             <p>
               <b>Customer:</b> {b.customer?.name}

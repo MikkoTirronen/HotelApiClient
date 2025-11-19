@@ -5,7 +5,10 @@ interface BookingListProps {
   onBookingClick: (booking: Booking) => void;
 }
 
-export default function BookingListComponent({ bookings, onBookingClick }: BookingListProps) {
+export default function BookingListComponent({
+  bookings,
+  onBookingClick,
+}: BookingListProps) {
   return (
     <div className="bg-white p-4 rounded-xl shadow-md">
       <h2 className="text-xl font-semibold mb-3">All Bookings</h2>
@@ -16,7 +19,7 @@ export default function BookingListComponent({ bookings, onBookingClick }: Booki
         <ul className="space-y-2">
           {bookings.map((b) => (
             <li
-              key={b.id}
+              key={b.bookingId}
               className="p-3 border rounded shadow-sm cursor-pointer hover:bg-gray-100"
               onClick={() => onBookingClick(b)}
             >
