@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router";
 
 const tabs = [
-  { label: "Bookings", path: "/bookings" },
+  { label: "Bookings", path: "/" },
   { label: "Rooms", path: "/rooms" },
   { label: "Customers", path: "/customers" },
 ];
@@ -12,7 +12,10 @@ export default function MainNav() {
   return (
     <nav className="flex border-b mb-4 space-x-4 px-4 py-2">
       {tabs.map((tab) => {
-        const isActive = location.pathname.startsWith(tab.path);
+        const isActive =
+          tab.path === "/"
+            ? location.pathname === "/"
+            : location.pathname.startsWith(tab.path);
         return (
           <Link
             key={tab.path}
