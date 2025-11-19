@@ -19,9 +19,6 @@ export default function UpdateBookingRoomSelect({
   setSelectedRoom,
   BASE_URL,
 }: UpdateBookingFormProps) {
-  // const [selectedRoom, setSelectedRoom] = useState<Room | null>(
-  //   booking.room || null
-  // );
 
   // Fetch available rooms when dates or guests change
   const checkAvailability = async () => {

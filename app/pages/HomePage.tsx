@@ -5,7 +5,7 @@ import CreateBookingForm from "~/components/CreateBookingForm";
 
 import Header from "~/components/HeaderComponent";
 import NavTabs from "~/components/NavTabsComponent";
-import BookingUpdateForm from "~/components/UpdateBookingComponent";
+import BookingUpdateForm from "~/components/BookingUpdateComponent";
 import type { Booking } from "~/types/booking";
 
 const BASE_URL = "http://localhost:5051";

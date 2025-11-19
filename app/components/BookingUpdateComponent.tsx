@@ -114,8 +114,35 @@ export default function BookingUpdateForm({
     checkIn &&
     checkOut;
 
+  const deleteBooking = async () => {
+    if (!confirm("Are you sure you want to delete this booking?")) return;
+
+    try {
+      const response = await fetch(
+        `${BASE_URL}/bookings/${booking.bookingId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to delete booking");
+
+      alert("Booking deleted!");
+      onUpdate(); // reload parent bookings
+    } catch (err: any) {
+      setErrorMessage(err.message || "Failed to delete booking");
+    }
+  };
+
   return (
-    <div className="p-4 bg-white rounded-xl shadow-md space-y-3">
+    <div className="p-4 bg-white rounded-xl shadow-md space-y-3 relative">
+      {/* Delete button in top-right corner */}
+      <button
+        onClick={deleteBooking}
+        className="absolute top-2 right-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+      >
+        Delete
+      </button>
       <h2 className="text-xl font-semibold">Update Booking</h2>
 
       <div>
@@ -155,7 +182,6 @@ export default function BookingUpdateForm({
         setAvailableRooms={setAvailableRooms}
         selectedRoom={selectedRoom}
         setSelectedRoom={setSelectedRoom}
-
         BASE_URL={BASE_URL}
       />
 
