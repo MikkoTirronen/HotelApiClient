@@ -5,7 +5,9 @@ import type { Booking } from "~/types/booking";
 interface UpdateBookingFormProps {
   booking: Booking;
   availableRooms: Room[];
+  selectedRoom: Room | null;
   setAvailableRooms: (rooms: Room[]) => void;
+  setSelectedRoom: (room: Room | null) => void;
   BASE_URL: string;
 }
 
@@ -13,9 +15,13 @@ export default function UpdateBookingRoomSelect({
   booking,
   availableRooms,
   setAvailableRooms,
+  selectedRoom,
+  setSelectedRoom,
   BASE_URL,
 }: UpdateBookingFormProps) {
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(booking.room);
+  // const [selectedRoom, setSelectedRoom] = useState<Room | null>(
+  //   booking.room || null
+  // );
 
   // Fetch available rooms when dates or guests change
   const checkAvailability = async () => {
@@ -35,6 +41,7 @@ export default function UpdateBookingRoomSelect({
 
       const rooms: Room[] = await response.json();
       setAvailableRooms(rooms);
+      console.log(rooms);
     } catch (err: any) {
       console.error(err);
     }
@@ -46,30 +53,35 @@ export default function UpdateBookingRoomSelect({
   }, [booking.startDate, booking.endDate, booking.numPersons]);
 
   return (
-    <div className="p-4 rounded-xl shadow-md bg-white">
-      <h2 className="text-xl font-semibold mb-2">Room</h2>
+    <div className={`${selectedRoom && "p-4 rounded-xl shadow-md bg-white"}`}>
+      {selectedRoom && (
+        <>
+          <h2 className="text-xl font-semibold mb-2">Room</h2>
 
-      {/* Show current room */}
-      <p className="mb-2">
-        Current room: <strong>{booking.room.roomNumber}</strong> ($
-        {booking.room.pricePerNight})
-      </p>
-
+          <p className="mb-2">
+            Current room: <strong>{booking.room?.roomNumber}</strong> ($
+            {booking.room?.pricePerNight})
+          </p>
+        </>
+      )}
+      <p>Available Rooms: {availableRooms.length}</p>
       {/* Dropdown to change room */}
       {availableRooms.length > 0 ? (
         <select
-          value={selectedRoom?.id ?? ""}
+          value={selectedRoom?.roomId ?? ""}
           onChange={(e) => {
             const room = availableRooms.find(
-              (r) => r.id === Number(e.target.value)
+              (r) => r.roomId === Number(e.target.value)
             );
             setSelectedRoom(room ?? null);
           }}
           className="w-full p-2 border rounded"
         >
-          <option value="">Select a different room</option>
+          <option value="">
+            {selectedRoom ? `Select a different room` : "Select a Room"}
+          </option>
           {availableRooms.map((r) => (
-            <option key={r.id} value={r.id}>
+            <option key={r.roomId} value={r.roomId}>
               Room {r.roomNumber} - ${r.pricePerNight} | Capacity:{" "}
               {r.baseCapacity + r.maxExtraBeds} | ExtraBeds: {r.maxExtraBeds}
             </option>
