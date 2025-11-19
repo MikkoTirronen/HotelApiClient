@@ -29,12 +29,14 @@ export default function BookingUpdateForm({
   const [checkOut, setCheckOut] = useState(booking.endDate.slice(0, 10));
   const [guests, setGuests] = useState(booking.numPersons || 1);
   const [availableRooms, setAvailableRooms] = useState<Room[]>([]);
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(booking.room);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(
+    booking.room || null
+  );
 
   const [customer, setCustomer] = useState<Customer>({
-    name: booking.customer.name,
-    email: booking.customer.email,
-    phone: booking.customer.phone,
+    name: booking.customer?.name || "",
+    email: booking.customer?.email || "",
+    phone: booking.customer?.phone || "",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -68,7 +70,7 @@ export default function BookingUpdateForm({
   const updateBooking = async () => {
     if (
       !selectedRoom ||
-      !booking.customer.id ||
+      !booking.customerId ||
       !checkIn ||
       !checkOut ||
       guests <= 0
@@ -78,19 +80,22 @@ export default function BookingUpdateForm({
     }
 
     const updateDto: UpdateBookingDto = {
-      customerId: booking.customer.id,
-      roomId: selectedRoom.id,
+      customerId: booking.customer?.customerId,
+      roomId: selectedRoom.roomId,
       startDate: new Date(checkIn).toISOString(),
       endDate: new Date(checkOut).toISOString(),
       numPersons: guests,
     };
 
     try {
-      const response = await fetch(`${BASE_URL}/bookings/${booking.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateDto),
-      });
+      const response = await fetch(
+        `${BASE_URL}/bookings/${booking.bookingId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updateDto),
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to update booking");
 
@@ -148,6 +153,9 @@ export default function BookingUpdateForm({
         booking={booking}
         availableRooms={availableRooms}
         setAvailableRooms={setAvailableRooms}
+        selectedRoom={selectedRoom}
+        setSelectedRoom={setSelectedRoom}
+
         BASE_URL={BASE_URL}
       />
 
