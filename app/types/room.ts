@@ -1,5 +1,5 @@
 export interface Room {
-  id: number;
+  roomId: number;
   roomNumber: string;
   pricePerNight: number;
   baseCapacity: number;

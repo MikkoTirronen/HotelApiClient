@@ -1,7 +1,7 @@
 export interface BookingDto {
   roomId: number;
-  checkIn: string;
-  checkOut: string;
+  startDate: string;
+  EndDate: string;
   notes?: string;
   name: string;
   email: string;

@@ -1,14 +1,16 @@
 
 export interface Booking {
-  id: number;
-  customer: {
-    id?: number,
+  bookingId?: number;
+  customerId?: number;
+  roomId?: number;
+  customer?: {
+    customerId?: number,
     name: string;
     email: string;
     phone: string;
   };
-  room: {
-    id: number;
+  room?: {
+    roomId: number;
     roomNumber: string;
     pricePerNight: number;
     baseCapacity: number;
