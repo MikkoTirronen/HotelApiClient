@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Customer } from "~/types/customer";
 import type { Room } from "~/types/room";
-import type{BookingDto} from "~/types/bookingDto"
+import type { BookingDto } from "~/types/bookingDto";
 interface CreateBookingWizardProps {
   reloadBookings: () => Promise<void>;
 }
@@ -80,9 +80,9 @@ export default function CreateBookingForm({
     }
 
     const bookingDto: BookingDto = {
-      roomId: selectedRoom.id,
-      checkIn,
-      checkOut,
+      roomId: selectedRoom.roomId,
+      startDate: new Date(checkIn).toISOString(),
+      EndDate: new Date(checkOut).toISOString(),
       name: customer.name,
       email: customer.email,
       phone: customer.phone,
@@ -178,10 +178,10 @@ export default function CreateBookingForm({
         )}
 
         <select
-          value={selectedRoom?.id ?? ""}
+          value={selectedRoom?.roomId ?? ""}
           onChange={(e) =>
             setSelectedRoom(
-              availableRooms.find((r) => r.id === Number(e.target.value)) ||
+              availableRooms.find((r) => r.roomId === Number(e.target.value)) ||
                 null
             )
           }
@@ -189,7 +189,7 @@ export default function CreateBookingForm({
         >
           <option value="">Select a room</option>
           {availableRooms.map((r) => (
-            <option key={r.id} value={r.id}>
+            <option key={r.roomId} value={r.roomId}>
               Room {r.roomNumber} - ${r.pricePerNight} | Capacity:{" "}
               {r.baseCapacity}
             </option>
