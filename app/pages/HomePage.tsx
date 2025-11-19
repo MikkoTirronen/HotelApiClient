@@ -21,7 +21,7 @@ export default function HomePage() {
     const data = await response.json();
     setBookings(data);
   };
-
+  const tabs = ["Bookings", "Create Booking", "Search Bookings"];
   useEffect(() => {
     loadBookings();
   }, []);
@@ -29,7 +29,7 @@ export default function HomePage() {
   return (
     <div className="max-w-3xl mx-auto p-6">
       <Header />
-      <NavTabs activeTab={activeTab} onChange={setActiveTab} />
+      <NavTabs activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
 
       {activeTab === "Bookings" && (
         <>
