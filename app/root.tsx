@@ -38,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex min-h-screen bg-gray-50">
           <aside className="w-48 bg-gray-100 p-6 space-y-4  shrink-0 ">
             <img
-              src="/public/BookingSystemLogo.png"
+              src="BookingSystemLogo.png"
               alt="logo"
               className="rounded-3xl"
             ></img>
