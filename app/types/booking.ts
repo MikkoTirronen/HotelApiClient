@@ -3,6 +3,7 @@ export interface Booking {
   bookingId?: number;
   customerId?: number;
   roomId?: number;
+  status?: number;
   customer?: {
     customerId?: number,
     name: string;
