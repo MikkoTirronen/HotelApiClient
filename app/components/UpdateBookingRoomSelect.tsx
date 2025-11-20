@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Room } from "~/types/room";
 import type { Booking } from "~/types/booking";
+import { useToast } from "~/context/ToastContext";
 
 interface UpdateBookingFormProps {
   booking: Booking;
@@ -19,7 +20,7 @@ export default function UpdateBookingRoomSelect({
   setSelectedRoom,
   BASE_URL,
 }: UpdateBookingFormProps) {
-
+    const { addToast } = useToast();
   // Fetch available rooms when dates or guests change
   const checkAvailability = async () => {
     if (!booking.startDate || !booking.endDate || booking.numPersons <= 0)
@@ -34,12 +35,16 @@ export default function UpdateBookingRoomSelect({
           startUtc
         )}&end=${encodeURIComponent(endUtc)}&guests=${booking.numPersons}`
       );
-      if (!response.ok) throw new Error("Failed to fetch rooms");
+      if (!response.ok) {
+        addToast("Failed to fetch rooms", "error")
+        throw new Error("Failed to fetch rooms");
+      }
 
       const rooms: Room[] = await response.json();
       setAvailableRooms(rooms);
       console.log(rooms);
     } catch (err: any) {
+      addToast(err, "error")
       console.error(err);
     }
   };

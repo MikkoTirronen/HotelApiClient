@@ -8,6 +8,7 @@ export default function MainNavVertical() {
     { name: "Bookings", path: "/" },
     { name: "Rooms", path: "/rooms" },
     { name: "Customers", path: "/customers" },
+    {name: "Invoices", path:"/invoices"}
   ];
 
   return (

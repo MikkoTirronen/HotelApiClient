@@ -3,6 +3,7 @@ import type { Room } from "~/types/room";
 import type { Customer } from "~/types/customer";
 import type { Booking } from "~/types/booking";
 import UpdateBookingRoomSelect from "./UpdateBookingRoomSelect";
+import { useToast } from "~/context/ToastContext";
 
 interface BookingUpdateFormProps {
   booking: Booking;
@@ -32,7 +33,7 @@ export default function BookingUpdateForm({
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(
     booking.room || null
   );
-
+  const { addToast } = useToast();
   const [customer, setCustomer] = useState<Customer>({
     name: booking.customer?.name || "",
     email: booking.customer?.email || "",
@@ -61,6 +62,7 @@ export default function BookingUpdateForm({
         setAvailableRooms(rooms.filter((r) => r.active));
       } catch (err: any) {
         setErrorMessage(err.message || "Failed to load rooms");
+        addToast(errorMessage,"error")
       }
     };
 
@@ -76,6 +78,7 @@ export default function BookingUpdateForm({
       guests <= 0
     ) {
       setErrorMessage("Please fill in all required fields before updating.");
+      addToast(errorMessage,"error")
       return;
     }
 
@@ -97,12 +100,16 @@ export default function BookingUpdateForm({
         }
       );
 
-      if (!response.ok) throw new Error("Failed to update booking");
+      if (!response.ok) {
+        addToast("Failed to update booking!","error")
+        throw new Error("Failed to update booking");
+      }
 
-      alert("Booking updated!");
+      addToast("Booking updated!","success")
       onUpdate();
     } catch (err: any) {
       setErrorMessage(err.message || "Failed to update booking");
+      addToast(errorMessage,"error")
     }
   };
 
@@ -125,12 +132,16 @@ export default function BookingUpdateForm({
         }
       );
 
-      if (!response.ok) throw new Error("Failed to delete booking");
+      if (!response.ok) {
+        addToast("Failed to delete booking","error")
+        throw new Error("Failed to delete booking");
+      }
 
-      alert("Booking deleted!");
+      addToast("Booking deleted!","info")
       onUpdate(); // reload parent bookings
     } catch (err: any) {
       setErrorMessage(err.message || "Failed to delete booking");
+      addToast(errorMessage,"error")
     }
   };
 
