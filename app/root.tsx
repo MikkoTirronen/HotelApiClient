@@ -9,6 +9,8 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { ToastProvider } from "./context/ToastContext";
+import MainNavVertical from "./components/MainNavVertical";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -19,7 +21,7 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
   },
 ];
 
@@ -33,7 +35,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <div className="flex min-h-screen bg-gray-50">
+          <aside className="w-48 bg-gray-100 p-6 space-y-4  shrink-0 ">
+            <img
+              src="/public/BookingSystemLogo.png"
+              alt="logo"
+              className="rounded-3xl"
+            ></img>
+            <MainNavVertical />
+          </aside>
+
+          <main className="flex-1 flex justify-center p-6">{children}</main>
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -42,7 +55,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <ToastProvider>
+      <Outlet />;
+    </ToastProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
