@@ -13,7 +13,9 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState("All");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+
   const BASE_URL = "http://localhost:5051";
+
   const loadBookings = async () => {
     const response = await fetch(`${BASE_URL}/bookings`);
     if (!response.ok) throw new Error("Failed to fetch bookings");
@@ -21,7 +23,6 @@ export default function HomePage() {
     setBookings(data);
   };
 
-  const tabs = ["All", "Create", "Search"];
 
   useEffect(() => {
     loadBookings();
@@ -31,7 +32,7 @@ export default function HomePage() {
 
         <div className="w-full max-w-3xl space-y-4">
           <Header />
-          <NavTabs activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
+          <NavTabs activeTab={activeTab} onChange={setActiveTab} tabs={["All", "Create", "Search"]} />
 
           {activeTab === "All" && (
             <>
