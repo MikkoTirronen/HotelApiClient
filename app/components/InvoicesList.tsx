@@ -65,7 +65,29 @@ export default function InvoicesList() {
     setPaymentAmount(invoice.amount);
     setCardType("Visa");
   };
+  const triggerVoidInvoices = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5051/invoices/void-unpaid",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
+      if (!response.ok) {
+        console.error("Failed to void invoices:", response.statusText);
+        return;
+      }
+
+      const result = await response.json();
+      console.log("Invoices voided:", result);
+    } catch (error) {
+      console.error("Error triggering void invoices:", error);
+    }
+  };
   const handlePaymentSubmit = async () => {
     const payload = {
       invoiceId: paymentInvoice.invoiceId,
@@ -216,6 +238,12 @@ export default function InvoicesList() {
               className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
             >
               Clear
+            </button>
+            <button
+              onClick={triggerVoidInvoices}
+              className="bg-gray-300 px-10 ml-50 py-2 rounded hover:bg-gray-400"
+            >
+              Void Expired Invoices
             </button>
           </div>
 
