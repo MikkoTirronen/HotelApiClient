@@ -6,4 +6,5 @@ export interface BookingDto {
   name: string;
   email: string;
   phone?: string;
+  extraBedsCount?: number;
 }

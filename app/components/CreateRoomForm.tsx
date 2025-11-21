@@ -42,28 +42,30 @@ export default function CreateRoomForm({
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 space-y-6">
-      <h2 className="text-2xl font-semibold">
+    <div className="max-w-xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6 border border-gray-200">
+      <h2 className="text-2xl font-bold tracking-tight">
         {mode === "create" ? "Create Room" : "Update Room"}
       </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Room Number */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Room Number</label>
+        <div className="space-y-1">
+          <label className="block text-sm font-semibold text-gray-700">
+            Room Number
+          </label>
           <input
             name="roomNumber"
             type="number"
             value={form.roomNumber}
             onChange={handleChange}
             required
-            className="w-full border-gray-300 rounded-md p-2"
+            className="w-full border rounded-lg px-3 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
         {/* Price Per Night */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
+        <div className="space-y-1">
+          <label className="block text-sm font-semibold text-gray-700">
             Price Per Night
           </label>
           <input
@@ -72,13 +74,13 @@ export default function CreateRoomForm({
             value={form.pricePerNight}
             onChange={handleChange}
             required
-            className="w-full border-gray-300 rounded-md p-2"
+            className="w-full border rounded-lg px-3 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
         {/* Base Capacity */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
+        <div className="space-y-1">
+          <label className="block text-sm font-semibold text-gray-700">
             Base Capacity
           </label>
           <input
@@ -87,13 +89,13 @@ export default function CreateRoomForm({
             value={form.baseCapacity}
             onChange={handleChange}
             required
-            className="w-full border-gray-300 rounded-md p-2"
+            className="w-full border rounded-lg px-3 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
         {/* Max Extra Beds */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
+        <div className="space-y-1">
+          <label className="block text-sm font-semibold text-gray-700">
             Max Extra Beds
           </label>
           <input
@@ -102,16 +104,17 @@ export default function CreateRoomForm({
             value={form.maxExtraBeds}
             onChange={handleChange}
             required
-            className="w-full border-gray-300 rounded-md p-2"
+            className="w-full border rounded-lg px-3 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
-        <div className="flex justify-between gap-4">
+        {/* Buttons */}
+        <div className="flex justify-end gap-3 pt-4">
           {onCancel && (
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 bg-gray-300 text-black py-2 rounded-md hover:bg-gray-400"
+              className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition"
             >
               Cancel
             </button>
@@ -119,9 +122,9 @@ export default function CreateRoomForm({
 
           <button
             type="submit"
-            className="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+            className="px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
           >
-            {mode === "create" ? "Create" : "Save Changes"}
+            {mode === "create" ? "Create Room" : "Save Changes"}
           </button>
         </div>
       </form>

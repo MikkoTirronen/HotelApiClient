@@ -10,18 +10,33 @@ interface UpdateBookingFormProps {
   setAvailableRooms: (rooms: Room[]) => void;
   setSelectedRoom: (room: Room | null) => void;
   BASE_URL: string;
+  extraBeds: number;
+  // ⭐ You should pass these up to parent form
+  setExtraBeds: (n: number) => void;
 }
 
 export default function UpdateBookingRoomSelect({
   booking,
   availableRooms,
-  setAvailableRooms,
   selectedRoom,
+  setAvailableRooms,
   setSelectedRoom,
   BASE_URL,
+  extraBeds,
+  setExtraBeds,
 }: UpdateBookingFormProps) {
-    const { addToast } = useToast();
-  // Fetch available rooms when dates or guests change
+  const { addToast } = useToast();
+
+  const [extraBedsEnabled, setExtraBedsEnabled] = useState(false);
+
+  // Load initial state from booking (if you store booking.extraBeds in backend)
+  useEffect(() => {
+    if (booking.extraBedsCount && booking.extraBedsCount > 0) {
+      setExtraBedsEnabled(true);
+      setExtraBeds(booking.extraBedsCount);
+    }
+  }, [booking.extraBedsCount, setExtraBeds]);
+
   const checkAvailability = async () => {
     if (!booking.startDate || !booking.endDate || booking.numPersons <= 0)
       return;
@@ -35,16 +50,16 @@ export default function UpdateBookingRoomSelect({
           startUtc
         )}&end=${encodeURIComponent(endUtc)}&guests=${booking.numPersons}`
       );
+
       if (!response.ok) {
-        addToast("Failed to fetch rooms", "error")
+        addToast("Failed to fetch rooms", "error");
         throw new Error("Failed to fetch rooms");
       }
 
       const rooms: Room[] = await response.json();
       setAvailableRooms(rooms);
-      console.log(rooms);
     } catch (err: any) {
-      addToast(err, "error")
+      addToast(err.message ?? err, "error");
       console.error(err);
     }
   };
@@ -55,19 +70,64 @@ export default function UpdateBookingRoomSelect({
   }, [booking.startDate, booking.endDate, booking.numPersons]);
 
   return (
-    <div className={`${selectedRoom && "p-4 rounded-xl shadow-md bg-white"}`}>
+    <div
+      className={`${selectedRoom && "p-4 rounded-xl shadow-md bg-white space-y-4"}`}
+    >
       {selectedRoom && (
         <>
-          <h2 className="text-xl font-semibold mb-2">Room</h2>
+          <h2 className="text-xl font-semibold">Room</h2>
 
-          <p className="mb-2">
+          <p>
             Current room: <strong>{booking.room?.roomNumber}</strong> ($
             {booking.room?.pricePerNight})
           </p>
         </>
       )}
-      <p>Available Rooms: {availableRooms.length}</p>
-      {/* Dropdown to change room */}
+
+      {/* ⭐ Extra Bed Selector FIRST */}
+      {selectedRoom && selectedRoom.maxExtraBeds > 0 && (
+        <div className="border-b pb-4 space-y-3">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={extraBedsEnabled}
+              onChange={(e) => {
+                setExtraBedsEnabled(e.target.checked);
+                if (!e.target.checked) setExtraBeds(0);
+              }}
+            />
+            <span className="font-medium">Add Extra Bed(s)</span>
+          </label>
+
+          {extraBedsEnabled && (
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Number of Extra Beds (max {selectedRoom.maxExtraBeds})
+              </label>
+
+              <select
+                value={extraBeds}
+                onChange={(e) => setExtraBeds(Number(e.target.value))}
+                className="w-full p-2 border rounded-md"
+              >
+                {Array.from(
+                  { length: selectedRoom.maxExtraBeds + 1 },
+                  (_, i) => (
+                    <option key={i} value={i}>
+                      {i} {i === 1 ? "bed" : "beds"}
+                    </option>
+                  )
+                )}
+              </select>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Info */}
+      <p className="text-gray-600">Available Rooms: {availableRooms.length}</p>
+
+      {/* Room dropdown */}
       {availableRooms.length > 0 ? (
         <select
           value={selectedRoom?.roomId ?? ""}
@@ -76,15 +136,20 @@ export default function UpdateBookingRoomSelect({
               (r) => r.roomId === Number(e.target.value)
             );
             setSelectedRoom(room ?? null);
+
+            // Reset extra beds on room change
+            setExtraBedsEnabled(false);
+            setExtraBeds(0);
           }}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded-md"
         >
           <option value="">
-            {selectedRoom ? `Select a different room` : "Select a Room"}
+            {selectedRoom ? "Select a different room" : "Select a Room"}
           </option>
+
           {availableRooms.map((r) => (
             <option key={r.roomId} value={r.roomId}>
-              Room {r.roomNumber} - ${r.pricePerNight} | Capacity:{" "}
+              Room {r.roomNumber} — ${r.pricePerNight} | Capacity:{" "}
               {r.baseCapacity + r.maxExtraBeds} | ExtraBeds: {r.maxExtraBeds}
             </option>
           ))}

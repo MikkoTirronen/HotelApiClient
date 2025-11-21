@@ -18,6 +18,8 @@ export default function CreateBookingForm({
   const [guests, setGuests] = useState(1);
   const [availableRooms, setAvailableRooms] = useState<Room[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [extraBedsEnabled, setExtraBedsEnabled] = useState(false);
+  const [extraBeds, setExtraBeds] = useState(0);
   const [customerResults, setCustomerResults] = useState<Customer[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [customer, setCustomer] = useState<Customer>({
@@ -126,6 +128,7 @@ export default function CreateBookingForm({
       name: customer.name,
       email: customer.email,
       phone: customer.phone,
+      extraBedsCount: extraBeds,
     };
 
     try {
@@ -219,10 +222,14 @@ export default function CreateBookingForm({
 
       {/* Room Section */}
       {enabledSteps.room && (
-        <div className="p-6 rounded-xl shadow-md bg-white">
-          <h2 className="text-xl font-semibold mb-4">Select Room</h2>
+        <div className="p-6 rounded-xl shadow-md bg-white space-y-4">
+          <h2 className="text-xl font-semibold">Select Room</h2>
 
-          <p className="mb-2">{availableRooms.length} room(s) available</p>
+          <p className="text-gray-600">
+            {availableRooms.length} room(s) available
+          </p>
+
+          {/* Room Selector */}
           <select
             value={selectedRoom?.roomId ?? ""}
             onChange={(e) =>
@@ -232,16 +239,49 @@ export default function CreateBookingForm({
                 ) || null
               )
             }
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded-md"
           >
             <option value="">Select a room</option>
             {availableRooms.map((r) => (
               <option key={r.roomId} value={r.roomId}>
-                Room {r.roomNumber} - ${r.pricePerNight} | Capacity:{" "}
-                {r.baseCapacity}
+                Room {r.roomNumber} — ${r.pricePerNight} | Beds:{" "}
+                {r.baseCapacity} | Extra: {r.maxExtraBeds}
               </option>
             ))}
           </select>
+
+          {/* Extra Bed Selector | Only visible if selected room allows extra beds */}
+          {selectedRoom && selectedRoom.maxExtraBeds > 0 && (
+            <div className="border-t pt-4">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={extraBedsEnabled}
+                  onChange={(e) => {
+                    setExtraBedsEnabled(e.target.checked);
+                    if (!e.target.checked) setExtraBeds(0);
+                  }}
+                />
+                <span className="font-medium">Add Extra Bed(s)</span>
+              </label>
+
+              {extraBedsEnabled && (
+                <div className="mt-3">
+                  <label className="block text-sm font-medium mb-1">
+                    Number of Extra Beds (max {selectedRoom.maxExtraBeds})
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={selectedRoom.maxExtraBeds}
+                    value={extraBeds}
+                    onChange={(e) => setExtraBeds(Number(e.target.value))}
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

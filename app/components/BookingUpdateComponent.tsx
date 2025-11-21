@@ -19,6 +19,7 @@ interface UpdateBookingDto {
   startDate?: string;
   endDate?: string;
   numPersons?: number;
+  extraBedsCount?: number;
 }
 
 export default function BookingUpdateForm({
@@ -32,6 +33,9 @@ export default function BookingUpdateForm({
   const [availableRooms, setAvailableRooms] = useState<Room[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(
     booking.room || null
+  );
+  const [extraBeds, setExtraBeds] = useState<number>(
+    booking.extraBedsCount || 0
   );
   const { addToast } = useToast();
   const [customer, setCustomer] = useState<Customer>({
@@ -62,7 +66,7 @@ export default function BookingUpdateForm({
         setAvailableRooms(rooms.filter((r) => r.active));
       } catch (err: any) {
         setErrorMessage(err.message || "Failed to load rooms");
-        addToast(errorMessage,"error")
+        addToast(errorMessage, "error");
       }
     };
 
@@ -78,7 +82,7 @@ export default function BookingUpdateForm({
       guests <= 0
     ) {
       setErrorMessage("Please fill in all required fields before updating.");
-      addToast(errorMessage,"error")
+      addToast(errorMessage, "error");
       return;
     }
 
@@ -88,6 +92,7 @@ export default function BookingUpdateForm({
       startDate: new Date(checkIn).toISOString(),
       endDate: new Date(checkOut).toISOString(),
       numPersons: guests,
+      extraBedsCount: extraBeds,
     };
 
     try {
@@ -101,15 +106,15 @@ export default function BookingUpdateForm({
       );
 
       if (!response.ok) {
-        addToast("Failed to update booking!","error")
+        addToast("Failed to update booking!", "error");
         throw new Error("Failed to update booking");
       }
 
-      addToast("Booking updated!","success")
+      addToast("Booking updated!", "success");
       onUpdate();
     } catch (err: any) {
       setErrorMessage(err.message || "Failed to update booking");
-      addToast(errorMessage,"error")
+      addToast(errorMessage, "error");
     }
   };
 
@@ -133,15 +138,15 @@ export default function BookingUpdateForm({
       );
 
       if (!response.ok) {
-        addToast("Failed to delete booking","error")
+        addToast("Failed to delete booking", "error");
         throw new Error("Failed to delete booking");
       }
 
-      addToast("Booking deleted!","info")
+      addToast("Booking deleted!", "info");
       onUpdate(); // reload parent bookings
     } catch (err: any) {
       setErrorMessage(err.message || "Failed to delete booking");
-      addToast(errorMessage,"error")
+      addToast(errorMessage, "error");
     }
   };
 
@@ -194,6 +199,8 @@ export default function BookingUpdateForm({
         selectedRoom={selectedRoom}
         setSelectedRoom={setSelectedRoom}
         BASE_URL={BASE_URL}
+        extraBeds={extraBeds}
+        setExtraBeds={setExtraBeds}
       />
 
       <div>

@@ -43,6 +43,28 @@ export default function RoomsPage() {
       console.error("Delete failed:", err);
     }
   };
+  const handleSubmit = async (data: any) => {
+    try {
+      if (selectedRoom) {
+        await fetch(`${BASE_URL}/rooms/${selectedRoom?.roomId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+      } else {
+        await fetch(`${BASE_URL}/rooms/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+      }
+      await loadRooms();
+      setSelectedRoom(null);
+      addToast("Created room success!", "success");
+    } catch (err) {
+      addToast("Submit failed!", "error");
+    }
+  };
   return (
     <div className="w-full max-w-3xl space-y-4">
       <Header />
@@ -60,30 +82,11 @@ export default function RoomsPage() {
             mode="edit"
             initialRoom={selectedRoom}
             onCancel={() => setSelectedRoom(null)}
-            onSubmit={async (data) => {
-              await fetch(`${BASE_URL}/rooms/${selectedRoom.roomId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-              });
-
-              await loadRooms();
-              setSelectedRoom(null);
-            }}
+            onSubmit={handleSubmit}
           />
         )}
         {activeTab === "Create" && !selectedRoom && (
-          <CreateRoomForm
-            mode="create"
-            onSubmit={async (data) => {
-              await fetch(`${BASE_URL}/rooms`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-              });
-              await loadRooms();
-            }}
-          />
+          <CreateRoomForm mode="create" onSubmit={handleSubmit} />
         )}
       </div>
     </div>
