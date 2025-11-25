@@ -83,7 +83,7 @@ export default function CustomerForm({
             Phone
           </label>
           <input
-            name="phoneNumber"
+            name="phone"
             type="text"
             value={form.phone}
             onChange={handleChange}

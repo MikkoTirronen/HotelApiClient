@@ -58,7 +58,6 @@ export default function BookingSearch() {
   return (
     <div className="p-4 space-y-4">
       
-
       {selectedBooking ? (
         <BookingUpdateComponent
           onUpdate={() => {

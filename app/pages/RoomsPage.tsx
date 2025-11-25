@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import CreateRoomForm from "~/components/CreateRoomForm";
 import Header from "~/components/HeaderComponent";
-import MainNav from "~/components/MainNavComponent";
-import MainNavVertical from "~/components/MainNavVertical";
 import NavTabs from "~/components/NavTabsComponent";
 import RoomsListComponent from "~/components/RoomListComponent";
 import { useToast } from "~/context/ToastContext";
